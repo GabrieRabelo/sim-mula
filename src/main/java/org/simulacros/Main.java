@@ -1,7 +1,11 @@
 package org.simulacros;
 
+import org.simulacros.events.Event;
 import org.simulacros.generator.NumberGenerator;
+import org.simulacros.queue.QueueProperties;
+import org.simulacros.queue.SimpleQueue;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Main {
@@ -13,8 +17,17 @@ public class Main {
         var numberOfRandoms = 100000;
         startStack(numberOfRandoms);
 
-        System.out.println(randomNumbers);
+        var events = new ArrayList<Event>();
 
+        var properties = QueueProperties.builder()
+                .withArrivalStart(2)
+                .withArrivalEnd(4)
+                .withAttendanceStart(5)
+                .withAttendanceEnd(7)
+                .withQueueCapacity(4)
+                .build();
+
+        var simpleQueue = new SimpleQueue(properties, randomNumbers, events);
 
     }
 
