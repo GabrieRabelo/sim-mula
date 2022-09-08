@@ -4,17 +4,15 @@ import org.simulacros.events.Action;
 import org.simulacros.events.Event;
 import org.simulacros.events.Events;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class SimpleQueue {
 
     private final QueueProperties queueProperties;
     private final Stack<Double> randomNumbers;
-
-    //private final List<Double> states = new ArrayList<>();
     private final Events events;
+
+    private final double[] statesTime;
 
     private int clientsCount;
 
@@ -23,17 +21,16 @@ public class SimpleQueue {
         this.randomNumbers = randomNumbers;
         this.events = events;
 
-        //var event = new Event(Action.IN, queueProperties.getArrivalStart());
         var event = new Event(Action.IN, 2);
         events.add(event);
-    }
 
-    public int getClientsCount() {
-        return clientsCount;
+        statesTime = new double[queueProperties.getQueueCapacity() + 1];
     }
 
     public void receiveClient(double time) {
         //Contabiliza tempo??
+        statesTime[clientsCount] += time - events.getLastExecuted();
+
         if (clientsCount < queueProperties.getQueueCapacity()) {
             // case para perda de cliente quand ofila cheia
             this.clientsCount++;
@@ -47,15 +44,29 @@ public class SimpleQueue {
     }
 
     public void serveClient(double time) {
+
+        statesTime[clientsCount] += time - events.getLastExecuted();
+
         this.clientsCount--;
+
         if (clientsCount >= 1) {
             scheduleExit(time);
         }
     }
 
+    public void printStatesTime() {
+        StringBuilder msg = new StringBuilder();
+        for (double v : statesTime) {
+            msg.append("[").append(v).append("], ");
+        }
+        System.out.println(msg);
+    }
+
     private void scheduleArrival(double time) {
-        if(randomNumbers.isEmpty())
+        if (randomNumbers.isEmpty()) {
             return;
+        }
+
         var randomNumber = randomNumbers.pop();
         var eventTime = (queueProperties.getArrivalEnd() - queueProperties.getArrivalStart()) * randomNumber + queueProperties.getArrivalStart() + time;
         var event = new Event(Action.IN, eventTime);
@@ -63,9 +74,11 @@ public class SimpleQueue {
     }
 
     private void scheduleExit(double time) {
-        if(randomNumbers.isEmpty())
+        if (randomNumbers.isEmpty()) {
             return;
-        var eventTime = (queueProperties.getAttendanceEnd() - queueProperties.getAttendanceStart()) * randomNumbers.pop() + queueProperties.getAttendanceStart() + time;
+        }
+        var randomNumber = randomNumbers.pop();
+        var eventTime = (queueProperties.getAttendanceEnd() - queueProperties.getAttendanceStart()) * randomNumber + queueProperties.getAttendanceStart() + time;
         var event = new Event(Action.OUT, eventTime);
         events.add(event);
     }

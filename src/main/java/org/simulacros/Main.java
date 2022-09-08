@@ -1,32 +1,21 @@
 package org.simulacros;
 
 import org.simulacros.events.Action;
-import org.simulacros.events.Event;
 import org.simulacros.events.Events;
 import org.simulacros.generator.NumberGenerator;
 import org.simulacros.queue.QueueProperties;
 import org.simulacros.queue.SimpleQueue;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class Main {
 
     private static final Stack<Double> randomNumbers = new Stack<>();
-    private static double time;
 
     public static void main(String[] args) {
 
-        //var numberOfRandoms = 8;
-        //startStack(numberOfRandoms);
-
-        randomNumbers.push(0.9881);
-        randomNumbers.push(0.7221);
-        randomNumbers.push(0.6813);
-        randomNumbers.push(0.5542);
-        randomNumbers.push(0.1643);
-        randomNumbers.push(0.8851);
-        randomNumbers.push(0.3276);
+        var numberOfRandoms = 10;
+        startStack(numberOfRandoms);
 
         var events = new Events();
 
@@ -42,7 +31,7 @@ public class Main {
         while (!randomNumbers.isEmpty()){
             //get next event by time
             var event = events.getNext();
-            time = event.getTime();
+            double time = event.getTime();
             if(event.getAction() == Action.IN){
                 simpleQueue.receiveClient(time);
             }else{
@@ -50,8 +39,9 @@ public class Main {
             }
             event.use();
         }
-        System.out.println(events);
 
+        System.out.println(events);
+        simpleQueue.printStatesTime();
     }
 
     private static void startStack(int randomNumberLength) {
