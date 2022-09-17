@@ -2,76 +2,65 @@ package org.simulacros.queue;
 
 public class QueueProperties {
 
-    private final int arrivalStart;
-    private final int arrivalEnd;
-    private final int attendanceStart;
-    private final int attendanceEnd;
+    private final int[] arrivalInterval;
+    private final int[] attendanceInterval;
+
     private final int queueCapacity;
+    private final int attendants;
 
     private QueueProperties(Builder builder) {
-        arrivalStart = builder.arrivalStart;
-        arrivalEnd = builder.arrivalEnd;
-        attendanceStart = builder.attendanceStart;
-        attendanceEnd = builder.attendanceEnd;
+        arrivalInterval = builder.arrivalInterval;
+        attendanceInterval = builder.attendanceInterval;
         queueCapacity = builder.queueCapacity;
-    }
-
-    public int getArrivalStart() {
-        return arrivalStart;
-    }
-
-    public int getArrivalEnd() {
-        return arrivalEnd;
-    }
-
-    public int getAttendanceStart() {
-        return attendanceStart;
-    }
-
-    public int getAttendanceEnd() {
-        return attendanceEnd;
-    }
-
-    public int getQueueCapacity() {
-        return queueCapacity;
+        attendants = builder.attendants;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+    public int[] getArrivalInterval() {
+        return arrivalInterval;
+    }
+
+    public int[] getAttendanceInterval() {
+        return attendanceInterval;
+    }
+
+    public int getQueueCapacity() {
+        return queueCapacity;
+    }
+
+    public int getAttendants() {
+        return attendants;
+    }
+
     public static final class Builder {
-        private int arrivalStart;
-        private int arrivalEnd;
-        private int attendanceStart;
-        private int attendanceEnd;
+        private int[] arrivalInterval;
+        private int[] attendanceInterval;
         private int queueCapacity;
+        private int attendants;
 
         private Builder() {
         }
 
-        public Builder withArrivalStart(int arrivalStart) {
-            this.arrivalStart = arrivalStart;
+        public Builder withArrivalInterval(int[] arrivalInterval) {
+            this.arrivalInterval = arrivalInterval;
             return this;
         }
 
-        public Builder withArrivalEnd(int arrivalEnd) {
-            this.arrivalEnd = arrivalEnd;
-            return this;
-        }
-
-        public Builder withAttendanceStart(int attendanceStart) {
-            this.attendanceStart = attendanceStart;
-            return this;
-        }
-
-        public Builder withAttendanceEnd(int attendanceEnd) {
-            this.attendanceEnd = attendanceEnd;
+        public Builder withAttendanceInterval(int[] attendanceInterval) {
+            this.attendanceInterval = attendanceInterval;
             return this;
         }
 
         public Builder withQueueCapacity(int queueCapacity) {
             this.queueCapacity = queueCapacity;
+            return this;
+        }
+
+        public Builder withAttendants(int attendants) {
+            this.attendants = attendants;
             return this;
         }
 

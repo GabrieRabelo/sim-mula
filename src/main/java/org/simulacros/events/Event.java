@@ -1,12 +1,10 @@
 package org.simulacros.events;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Event {
 
-    private Action action;
-    private double time;
+    private final Action action;
+    private final double time;
     private boolean used;
 
     public Event(Action action, double time) {
