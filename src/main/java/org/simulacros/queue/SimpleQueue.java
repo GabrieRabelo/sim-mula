@@ -30,7 +30,7 @@ public class SimpleQueue {
         statesTime[this.clientsCount] += time - scheduler.getLastExecuted();
 
         if (this.clientsCount < this.queueProperties.getQueueCapacity()) {
-            // case para perda de cliente quand ofila cheia
+            // case para perda de cliente quando fila cheia
             this.clientsCount++;
 
             if (clientsCount <= queueProperties.getAttendants()) {
@@ -49,7 +49,7 @@ public class SimpleQueue {
 
         this.clientsCount--;
 
-        if (clientsCount >= 1) {
+        if (clientsCount >= queueProperties.getAttendants()) {
             scheduler.scheduleExit(this.queueProperties, time);
         }
     }

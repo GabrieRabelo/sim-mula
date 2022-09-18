@@ -15,7 +15,7 @@ public class Simulation {
 
     public static void main(String[] args) {
 
-        if(args.length == 0) {
+        if(args.length != 9) {
             System.out.println("You are trying to run the program without parameters. \n" +
                     "In order to run Successfully the program, you need to provide the configuration with the following instructions:\n" +
                     "arg0: First arrival time\n" +
