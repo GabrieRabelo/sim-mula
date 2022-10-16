@@ -8,17 +8,19 @@ public class SimpleQueue {
 
     private final QueueProperties queueProperties;
     private final Scheduler scheduler;
-
+    
     private final double[] statesTime;
-
+    
     private int clientsCount;
     private int lostClients = 0;
+    private int id;
 
-    public SimpleQueue(QueueProperties queueProperties, Scheduler scheduler, Integer firstArrival) {
+    public SimpleQueue(QueueProperties queueProperties, Scheduler scheduler, Integer firstArrival, Integer id) {
         this.queueProperties = queueProperties;
         this.scheduler = scheduler;
+        this.id = id;
 
-        var event = new Event(Action.IN, firstArrival);
+        var event = new Event(Action.IN, firstArrival, id);
         scheduler.add(event);
 
         statesTime = new double[queueProperties.getQueueCapacity() + 1];
@@ -35,12 +37,12 @@ public class SimpleQueue {
 
             if (clientsCount <= queueProperties.getAttendants()) {
                 // agenda saida
-                scheduler.scheduleExit(this.queueProperties, time);
+                scheduler.scheduleExit(this.queueProperties, time, this.id);
             }
         } else {
             lostClients++;
         }
-        scheduler.scheduleArrival(this.queueProperties, time);
+        scheduler.scheduleArrival(this.queueProperties, time, this.id);
     }
 
     public void serveClient(double time) {
@@ -50,7 +52,7 @@ public class SimpleQueue {
         this.clientsCount--;
 
         if (clientsCount >= queueProperties.getAttendants()) {
-            scheduler.scheduleExit(this.queueProperties, time);
+            scheduler.scheduleExit(this.queueProperties, time, this.id);
         }
     }
 
@@ -61,6 +63,10 @@ public class SimpleQueue {
 
     public int getLostClients() {
         return lostClients;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public double[] getProbabilities() {

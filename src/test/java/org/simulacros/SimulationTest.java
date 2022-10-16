@@ -37,7 +37,7 @@ class SimulationTest {
 
         var firstArrival = 2;
 
-        var simpleQueue = new SimpleQueue(properties, scheduler, firstArrival);
+        var simpleQueue = new SimpleQueue(properties, scheduler, firstArrival, 1);
 
         // When
         while (!randomNumbers.isEmpty()){

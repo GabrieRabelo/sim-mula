@@ -34,26 +34,31 @@ public class Scheduler {
         this.events.add(e);
     }
 
-    public void scheduleArrival(QueueProperties queueProperties, double time) {
+    public void scheduleArrival(QueueProperties queueProperties, double time, int queueId) {
         if (randomNumbers.isEmpty()) {
             return;
         }
-        var start = queueProperties.getArrivalInterval()[0];
-        var end = queueProperties.getArrivalInterval()[1];
 
-        var eventTime = (end - start) * randomNumbers.pop() + start + time;
-        var event = new Event(Action.IN, eventTime);
-        this.add(event);
+        if (queueId == 0) {
+            var start = queueProperties.getArrivalInterval()[0];
+            var end = queueProperties.getArrivalInterval()[1];
+            var eventTime = (end - start) * randomNumbers.pop() + start + time;
+            var event = new Event(Action.IN, eventTime, queueId);
+            this.add(event);
+        } else {
+            var event = new Event(Action.IN, time, queueId);
+            this.add(event);
+        }
     }
 
-    public void scheduleExit(QueueProperties queueProperties, double time) {
+    public void scheduleExit(QueueProperties queueProperties, double time, int queueId) {
         if (randomNumbers.isEmpty()) {
             return;
         }
         var start = queueProperties.getAttendanceInterval()[0];
         var end = queueProperties.getAttendanceInterval()[1];
         var eventTime = (end - start) * randomNumbers.pop() + start + time;
-        var event = new Event(Action.OUT, eventTime);
+        var event = new Event(Action.OUT, eventTime, queueId);
         this.add(event);
     }
 

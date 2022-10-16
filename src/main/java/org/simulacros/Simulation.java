@@ -6,6 +6,7 @@ import org.simulacros.generator.NumberGenerator;
 import org.simulacros.queue.QueueProperties;
 import org.simulacros.queue.SimpleQueue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -14,49 +15,63 @@ public class Simulation {
     private static final Stack<Double> randomNumbers = new Stack<>();
 
     public static void main(String[] args) {
-        //3 2 4 3 5 5 1 100 45
+        int queueQuantity = 2;
+        var scheduler = new Scheduler(randomNumbers);
+
+        var queues = new ArrayList<SimpleQueue>();
+        var randomNumber = 100;
+        var seedPseudRandomNumber = 45;
+
+        var firstArrival = 3;
         var arrivalStart = 2;
         var arrivalEnd = 4;
         var attendanceStart = 3;
         var attendanceEnd = 5;
         var queueCapacity = 5;
         var attendantsNumber = 1;
-        var randomNumber = 100;
-        var seedPseudRandomNumber = 45;
-
-        var scheduler = new Scheduler(randomNumbers);
-
-        var firstArrival = 3;
 
         var properties = QueueProperties.builder()
-                .withArrivalInterval(new int[]{arrivalStart, arrivalEnd})
-                .withAttendanceInterval(new int[]{attendanceStart, attendanceEnd})
+                .withArrivalInterval(new int[] { arrivalStart, arrivalEnd })
+                .withAttendanceInterval(new int[] { attendanceStart, attendanceEnd })
                 .withQueueCapacity(queueCapacity)
                 .withAttendants(attendantsNumber)
                 .build();
         startStack(randomNumber, seedPseudRandomNumber);
+        queues.add(new SimpleQueue(properties, scheduler, firstArrival, 0));
 
-        var simpleQueue = new SimpleQueue(properties, scheduler, firstArrival);
+        for (int i = 1; i < queueQuantity; i++) {
+            properties = QueueProperties.builder()
+                    .withAttendanceInterval(new int[] { attendanceStart, attendanceEnd })
+                    .withQueueCapacity(queueCapacity)
+                    .withAttendants(attendantsNumber)
+                    .build();
+            startStack(randomNumber, seedPseudRandomNumber);
+            queues.add(new SimpleQueue(properties, scheduler, 0, i));
+        }
 
         while (!randomNumbers.isEmpty()) {
-            //get next event by time
+            // get next event by time
             var event = scheduler.getNext();
             double time = event.getTime();
+            int queueId = event.getQueueId();
 
             if (event.getAction() == Action.IN) {
-                simpleQueue.receiveClient(time);
-            } else {
-                simpleQueue.serveClient(time);
+                queues.get(queueId).receiveClient(time);
+            } else if (event.getAction() == Action.OUT) {
+                queues.get(queueId).serveClient(time);
+                if (queueId != queues.size() - 1) {
+                    queues.get(queueId + 1).receiveClient(time);
+                }
             }
 
             event.use();
         }
 
-        System.out.println("States: " + Arrays.toString(simpleQueue.getStatesTime()));
+        System.out.println("States: " + Arrays.toString(queues.get(1).getStatesTime()));
         System.out.println("---------------");
-        System.out.println("Probabilities:" + Arrays.toString(simpleQueue.getProbabilities()));
+        System.out.println("Probabilities:" + Arrays.toString(queues.get(1).getProbabilities()));
         System.out.println();
-        System.out.println("Lost Clients: " + simpleQueue.getLostClients());
+        System.out.println("Lost Clients: " + queues.get(1).getLostClients());
     }
 
     private static void startStack(int randomNumberLength, int seed) {
