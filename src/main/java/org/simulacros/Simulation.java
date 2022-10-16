@@ -14,45 +14,38 @@ public class Simulation {
     private static final Stack<Double> randomNumbers = new Stack<>();
 
     public static void main(String[] args) {
-
-        if(args.length != 9) {
-            System.out.println("You are trying to run the program without parameters. \n" +
-                    "In order to run Successfully the program, you need to provide the configuration with the following instructions:\n" +
-                    "arg0: First arrival time\n" +
-                    "arg1: Arrival start interval\n" +
-                    "arg2: Arrival end interval\n" +
-                    "arg3: Attendance start interval\n" +
-                    "arg4: Attendance end interval\n" +
-                    "arg5: Queue Capacity\n" +
-                    "arg6: Attendants number\n" +
-                    "arg7: Length of simulation random numbers\n" +
-                    "arg8: Seed of pseud-random number generator.");
-            return;
-        }
+        //3 2 4 3 5 5 1 100 45
+        var arrivalStart = 2;
+        var arrivalEnd = 4;
+        var attendanceStart = 3;
+        var attendanceEnd = 5;
+        var queueCapacity = 5;
+        var attendantsNumber = 1;
+        var randomNumber = 100;
+        var seedPseudRandomNumber = 45;
 
         var scheduler = new Scheduler(randomNumbers);
 
-        var firstArrival = Integer.parseInt(args[0]);
+        var firstArrival = 3;
 
         var properties = QueueProperties.builder()
-                .withArrivalInterval(new int[]{Integer.parseInt(args[1]), Integer.parseInt(args[2])})
-                .withAttendanceInterval(new int[]{Integer.parseInt(args[3]),Integer.parseInt(args[4])})
-                .withQueueCapacity(Integer.parseInt(args[5]))
-                .withAttendants(Integer.parseInt(args[6]))
+                .withArrivalInterval(new int[]{arrivalStart, arrivalEnd})
+                .withAttendanceInterval(new int[]{attendanceStart, attendanceEnd})
+                .withQueueCapacity(queueCapacity)
+                .withAttendants(attendantsNumber)
                 .build();
-
-        startStack(Integer.parseInt(args[7]), Integer.parseInt(args[8]));
+        startStack(randomNumber, seedPseudRandomNumber);
 
         var simpleQueue = new SimpleQueue(properties, scheduler, firstArrival);
 
-        while (!randomNumbers.isEmpty()){
+        while (!randomNumbers.isEmpty()) {
             //get next event by time
             var event = scheduler.getNext();
             double time = event.getTime();
 
-            if(event.getAction() == Action.IN){
+            if (event.getAction() == Action.IN) {
                 simpleQueue.receiveClient(time);
-            }else{
+            } else {
                 simpleQueue.serveClient(time);
             }
 
