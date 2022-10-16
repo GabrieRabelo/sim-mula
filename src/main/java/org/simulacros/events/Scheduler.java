@@ -39,16 +39,17 @@ public class Scheduler {
             return;
         }
 
-        if (queueId == 0) {
+        // if (queueId == 0) {
             var start = queueProperties.getArrivalInterval()[0];
             var end = queueProperties.getArrivalInterval()[1];
             var eventTime = (end - start) * randomNumbers.pop() + start + time;
             var event = new Event(Action.IN, eventTime, queueId);
             this.add(event);
-        } else {
-            var event = new Event(Action.IN, time, queueId);
-            this.add(event);
-        }
+        // } else {
+            // var eventTime = (end - start) * randomNumbers.pop() + start + time;
+            // var event = new Event(Action.IN, time, queueId);
+            // this.add(event);
+        // }
     }
 
     public void scheduleExit(QueueProperties queueProperties, double time, int queueId) {

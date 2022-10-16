@@ -41,12 +41,13 @@ public class Simulation {
 
         for (int i = 1; i < queueQuantity; i++) {
             properties = QueueProperties.builder()
+                    .withArrivalInterval(new int[] { arrivalStart, arrivalEnd })
                     .withAttendanceInterval(new int[] { attendanceStart, attendanceEnd })
                     .withQueueCapacity(queueCapacity)
                     .withAttendants(attendantsNumber)
                     .build();
             startStack(randomNumber, seedPseudRandomNumber);
-            queues.add(new SimpleQueue(properties, scheduler, 0, i));
+            queues.add(new SimpleQueue(properties, scheduler, 3, i));
         }
 
         while (!randomNumbers.isEmpty()) {
@@ -67,11 +68,11 @@ public class Simulation {
             event.use();
         }
 
-        System.out.println("States: " + Arrays.toString(queues.get(1).getStatesTime()));
+        System.out.println("States: " + Arrays.toString(queues.get(0).getStatesTime()));
         System.out.println("---------------");
-        System.out.println("Probabilities:" + Arrays.toString(queues.get(1).getProbabilities()));
+        System.out.println("Probabilities:" + Arrays.toString(queues.get(0).getProbabilities()));
         System.out.println();
-        System.out.println("Lost Clients: " + queues.get(1).getLostClients());
+        System.out.println("Lost Clients: " + queues.get(0).getLostClients());
     }
 
     private static void startStack(int randomNumberLength, int seed) {
