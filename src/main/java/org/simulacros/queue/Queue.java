@@ -1,10 +1,8 @@
 package org.simulacros.queue;
 
-import org.simulacros.events.Action;
-import org.simulacros.events.Event;
 import org.simulacros.events.Scheduler;
 
-public class SimpleQueue {
+public class Queue {
 
     private final QueueProperties queueProperties;
     private final Scheduler scheduler;
@@ -14,20 +12,17 @@ public class SimpleQueue {
     private int clientsCount;
     private int lostClients = 0;
 
-    public SimpleQueue(QueueProperties queueProperties, Scheduler scheduler) {
+    public Queue(QueueProperties queueProperties, Scheduler scheduler) {
         this.queueProperties = queueProperties;
         this.scheduler = scheduler;
-
-        var event = new Event(Action.IN, queueProperties.getFirstArrival());
-        scheduler.add(event);
-
         statesTime = new double[queueProperties.getQueueCapacity() + 1];
     }
 
-    public void receiveClient(double time) {
+    public void countTime(double now) {
+        statesTime[this.clientsCount] += now - scheduler.getLastExecuted();
+    }
 
-        // Contabiliza o tempo
-        statesTime[this.clientsCount] += time - scheduler.getLastExecuted();
+    public void receiveClient(double now) {
 
         if (this.clientsCount < this.queueProperties.getQueueCapacity()) {
             // case para perda de cliente quando fila cheia
@@ -35,22 +30,39 @@ public class SimpleQueue {
 
             if (clientsCount <= queueProperties.getAttendants()) {
                 // agenda saida
-                scheduler.scheduleExit(this.queueProperties, time);
+                scheduler.schedulePassage(this.queueProperties, now);
             }
         } else {
             lostClients++;
         }
-        scheduler.scheduleArrival(this.queueProperties, time);
+        scheduler.scheduleArrival(this.queueProperties, now);
     }
 
-    public void serveClient(double time) {
 
-        statesTime[clientsCount] += time - scheduler.getLastExecuted();
+    public void passClientOut(double now) {
+        this.clientsCount--;
+        if (clientsCount >= this.queueProperties.getAttendants()) {
+            scheduler.schedulePassage(this.queueProperties, now);
+        }
+    }
+
+    public void passClientIn(double now) {
+        if (clientsCount < this.queueProperties.getQueueCapacity()) {
+            this.clientsCount++;
+            if(this.clientsCount <= this.queueProperties.getAttendants()) {
+                scheduler.scheduleExit(this.queueProperties, now);
+            }
+        } else {
+            lostClients ++;
+        }
+    }
+
+    public void serveClient(double now) {
 
         this.clientsCount--;
 
         if (clientsCount >= queueProperties.getAttendants()) {
-            scheduler.scheduleExit(this.queueProperties, time);
+            scheduler.scheduleExit(this.queueProperties, now);
         }
     }
 

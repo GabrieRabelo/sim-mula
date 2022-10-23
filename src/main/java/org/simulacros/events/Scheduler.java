@@ -57,6 +57,17 @@ public class Scheduler {
         this.add(event);
     }
 
+    public void schedulePassage(QueueProperties queueProperties, double time) {
+        if (randomNumbers.isEmpty()) {
+            return;
+        }
+        var start = queueProperties.getAttendanceInterval()[0];
+        var end = queueProperties.getAttendanceInterval()[1];
+        var eventTime = (end - start) * randomNumbers.pop() + start + time;
+        var event = new Event(Action.PASSAGE, eventTime);
+        this.add(event);
+    }
+
     @Override
     public String toString() {
         return "Scheduler{" +
