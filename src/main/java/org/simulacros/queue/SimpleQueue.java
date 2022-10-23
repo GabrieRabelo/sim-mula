@@ -14,11 +14,11 @@ public class SimpleQueue {
     private int clientsCount;
     private int lostClients = 0;
 
-    public SimpleQueue(QueueProperties queueProperties, Scheduler scheduler, Integer firstArrival) {
+    public SimpleQueue(QueueProperties queueProperties, Scheduler scheduler) {
         this.queueProperties = queueProperties;
         this.scheduler = scheduler;
 
-        var event = new Event(Action.IN, firstArrival);
+        var event = new Event(Action.IN, queueProperties.getFirstArrival());
         scheduler.add(event);
 
         statesTime = new double[queueProperties.getQueueCapacity() + 1];

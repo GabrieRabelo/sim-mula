@@ -33,11 +33,10 @@ class SimulationTest {
                 .withAttendanceInterval(new int[]{3,6})
                 .withQueueCapacity(3)
                 .withAttendants(1)
+                .withFirstArrival(2)
                 .build();
 
-        var firstArrival = 2;
-
-        var simpleQueue = new SimpleQueue(properties, scheduler, firstArrival);
+        var simpleQueue = new SimpleQueue(properties, scheduler);
 
         // When
         while (!randomNumbers.isEmpty()){
