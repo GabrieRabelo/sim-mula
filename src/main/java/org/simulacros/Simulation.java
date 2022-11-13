@@ -4,16 +4,19 @@ import org.simulacros.events.Action;
 import org.simulacros.events.Event;
 import org.simulacros.events.Scheduler;
 import org.simulacros.generator.NumberGenerator;
+import org.simulacros.input.Properties;
 import org.simulacros.queue.QueueProperties;
 import org.simulacros.queue.Queue;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Stack;
 
 public class Simulation {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+        var properties = Properties.fromJsonFile("properties");
         var randomNumber = 100000;
         var seedPseudRandomNumber = 45;
 

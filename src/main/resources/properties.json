@@ -1,0 +1,56 @@
+{
+  "randoms": 100000,
+  "seed": 45,
+  "queues": [
+    {
+      "id": 1,
+      "arrivalInterval": "1..4",
+      "departureInterval": "1..1.5",
+      "kendallNotation": "G/G/1",
+      "routes": [
+        {
+          "to": 2,
+          "rate": 0.8
+        },
+        {
+          "to": 3,
+          "rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "departureInterval": "5..10",
+      "kendallNotation": "G/G/3/5",
+      "routes": [
+        {
+          "to": 1,
+          "rate": 0.3
+        },
+        {
+          "to": 3,
+          "rate": 0.5
+        },
+        {
+          "to": 0,
+          "rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "departureInterval": "10..20",
+      "kendallNotation": "G/G/2/8",
+      "routes": [
+        {
+          "to": 2,
+          "rate": 0.7
+        },
+        {
+          "to": 0,
+          "rate": 0.3
+        }
+      ]
+    }
+  ]
+}
