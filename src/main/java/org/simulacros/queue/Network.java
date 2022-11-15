@@ -13,7 +13,7 @@ public class Network {
         this.queues = queues;
     }
 
-    private static Network fromProperty(List<QueueProperty> queueProperties) {
+    public static Network fromProperty(List<QueueProperty> queueProperties) {
         var queues = new ArrayList<Queue>();
 
         for (QueueProperty property: queueProperties) {
@@ -22,7 +22,7 @@ public class Network {
 
             var attendants = Integer.parseInt(kendallProps[2]);
             var capacity = kendallProps.length == 3 ? -1 : Integer.parseInt(kendallProps[3]);
-            var attendanceInterval = property.getArrivalInterval().split("..");
+            var attendanceInterval = property.getDepartureInterval().split("\\.\\.");
             var attendanceStart = Double.parseDouble(attendanceInterval[0]);
             var attendanceEnd = Double.parseDouble(attendanceInterval[1]);
 
@@ -32,7 +32,10 @@ public class Network {
                     .withAttendanceInterval(new double[]{attendanceStart, attendanceEnd});
 
             if (property.getArrivalInterval() != null) {
-                queuePropsBuilder.withArrivalInterval(new double[]{});
+                var arrivalInterval = property.getArrivalInterval().split("\\.\\.");
+                var arrivalStart = Double.parseDouble(arrivalInterval[0]);
+                var arrivalEnd = Double.parseDouble(arrivalInterval[1]);
+                queuePropsBuilder.withArrivalInterval(new double[]{arrivalStart, arrivalEnd});
             }
 
             var queue = new Queue(queuePropsBuilder.build(),null);

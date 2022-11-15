@@ -5,6 +5,7 @@ import org.simulacros.events.Event;
 import org.simulacros.events.Scheduler;
 import org.simulacros.generator.NumberGenerator;
 import org.simulacros.input.Properties;
+import org.simulacros.queue.Network;
 import org.simulacros.queue.QueueProperties;
 import org.simulacros.queue.Queue;
 
@@ -21,6 +22,8 @@ public class Simulation {
         var randomNumbers = generateRandomStack(properties.getRandoms(), properties.getSeed());
 
         var scheduler = new Scheduler(randomNumbers);
+
+        var network = Network.fromProperty(properties.getQueues());
 
         // Creating queues
         var firstQueueProperties = QueueProperties.builder()
