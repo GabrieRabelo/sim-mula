@@ -2,14 +2,14 @@ package org.simulacros.input;
 
 import java.util.List;
 
-public class Queue {
+public class QueueProperty {
     private int id;
     private String arrivalInterval;
     private String departureInterval;
     private String kendallNotation;
     private List<Route> routes;
 
-    public Queue() {
+    public QueueProperty() {
     }
 
     public int getId() {

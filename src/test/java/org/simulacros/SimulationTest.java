@@ -30,8 +30,8 @@ class SimulationTest {
         var scheduler = new Scheduler(randomNumbers);
 
         var properties = QueueProperties.builder()
-                .withArrivalInterval(new int[]{1,2})
-                .withAttendanceInterval(new int[]{3,6})
+                .withArrivalInterval(new double[]{1,2})
+                .withAttendanceInterval(new double[]{3,6})
                 .withQueueCapacity(3)
                 .withAttendants(1)
                 .build();
@@ -94,14 +94,14 @@ class SimulationTest {
 
         // Creating queues
         var firstQueueProperties = QueueProperties.builder()
-                .withArrivalInterval(new int[]{2, 3})
-                .withAttendanceInterval(new int[]{2, 5})
+                .withArrivalInterval(new double[]{2, 3})
+                .withAttendanceInterval(new double[]{2, 5})
                 .withAttendants(2)
                 .withQueueCapacity(3)
                 .build();
 
         var secondQueueProperties = QueueProperties.builder()
-                .withAttendanceInterval(new int[]{3, 5})
+                .withAttendanceInterval(new double[]{3, 5})
                 .withAttendants(1)
                 .withQueueCapacity(3)
                 .build();

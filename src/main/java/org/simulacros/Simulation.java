@@ -17,23 +17,21 @@ public class Simulation {
     public static void main(String[] args) throws IOException {
 
         var properties = Properties.fromJsonFile("properties");
-        var randomNumber = 100000;
-        var seedPseudRandomNumber = 45;
 
-        var randomNumbers = generateRandomStack(randomNumber, seedPseudRandomNumber);
+        var randomNumbers = generateRandomStack(properties.getRandoms(), properties.getSeed());
 
         var scheduler = new Scheduler(randomNumbers);
 
         // Creating queues
         var firstQueueProperties = QueueProperties.builder()
-                .withArrivalInterval(new int[]{2, 3})
-                .withAttendanceInterval(new int[]{2, 5})
+                .withArrivalInterval(new double[]{2, 3})
+                .withAttendanceInterval(new double[]{2, 5})
                 .withAttendants(2)
                 .withQueueCapacity(3)
                 .build();
 
         var secondQueueProperties = QueueProperties.builder()
-                .withAttendanceInterval(new int[]{3, 5})
+                .withAttendanceInterval(new double[]{3, 5})
                 .withAttendants(1)
                 .withQueueCapacity(3)
                 .build();

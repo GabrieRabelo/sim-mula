@@ -2,8 +2,8 @@ package org.simulacros.queue;
 
 public class QueueProperties {
 
-    private final int[] arrivalInterval;
-    private final int[] attendanceInterval;
+    private final double[] arrivalInterval;
+    private final double[] attendanceInterval;
 
     private final int queueCapacity;
     private final int attendants;
@@ -19,11 +19,11 @@ public class QueueProperties {
         return new Builder();
     }
 
-    public int[] getArrivalInterval() {
+    public double[] getArrivalInterval() {
         return arrivalInterval;
     }
 
-    public int[] getAttendanceInterval() {
+    public double[] getAttendanceInterval() {
         return attendanceInterval;
     }
 
@@ -36,20 +36,20 @@ public class QueueProperties {
     }
 
     public static final class Builder {
-        private int[] arrivalInterval;
-        private int[] attendanceInterval;
+        private double[] arrivalInterval;
+        private double[] attendanceInterval;
         private int queueCapacity;
         private int attendants;
 
         private Builder() {
         }
 
-        public Builder withArrivalInterval(int[] arrivalInterval) {
+        public Builder withArrivalInterval(double[] arrivalInterval) {
             this.arrivalInterval = arrivalInterval;
             return this;
         }
 
-        public Builder withAttendanceInterval(int[] attendanceInterval) {
+        public Builder withAttendanceInterval(double[] attendanceInterval) {
             this.attendanceInterval = attendanceInterval;
             return this;
         }

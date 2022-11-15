@@ -9,7 +9,7 @@ import java.util.List;
 public class Properties {
     private int randoms;
     private int seed;
-    private List<Queue> queues;
+    private List<QueueProperty> queues;
 
     public Properties() {
     }
@@ -22,7 +22,7 @@ public class Properties {
         return seed;
     }
 
-    public List<Queue> getQueues() {
+    public List<QueueProperty> getQueues() {
         return queues;
     }
 
@@ -34,7 +34,7 @@ public class Properties {
         this.seed = seed;
     }
 
-    public void setQueues(List<Queue> queues) {
+    public void setQueues(List<QueueProperty> queues) {
         this.queues = queues;
     }
 
@@ -42,9 +42,5 @@ public class Properties {
         var objectMapper = new ObjectMapper();
         var path = String.format("src/main/resources/%s.json", fileName);
         return objectMapper.readValue(new File(path), Properties.class);
-    }
-
-    public static void main(String[] args) throws IOException {
-        fromJsonFile("properties");
     }
 }
