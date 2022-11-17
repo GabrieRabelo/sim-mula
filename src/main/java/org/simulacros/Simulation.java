@@ -55,6 +55,8 @@ public class Simulation {
             firstQueue.countTime(now);
             secondQueue.countTime(now);
 
+
+
             switch (event.getAction()) {
                 case IN:
                     firstQueue.receiveClient(now);

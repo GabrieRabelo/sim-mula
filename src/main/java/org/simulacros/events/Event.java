@@ -7,10 +7,14 @@ public class Event {
     private final double time;
     private boolean used;
 
-    public Event(Action action, double time) {
+    private Integer fromQueueId, toQueueId;
+
+    public Event(Action action, double time, Integer fromQueueId, Integer toQueueId) {
         this.action = action;
         this.time = time;
         this.used = false;
+        this.fromQueueId = fromQueueId;
+        this.toQueueId = toQueueId;
     }
 
     public Action getAction() {
@@ -31,6 +35,14 @@ public class Event {
 
     public void use() {
         this.used = true;
+    }
+
+    public Integer getFromQueueId() {
+        return fromQueueId;
+    }
+
+    public Integer getToQueueId() {
+        return toQueueId;
     }
 
     @Override

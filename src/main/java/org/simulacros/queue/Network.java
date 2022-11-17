@@ -29,8 +29,9 @@ public class Network {
             var queuePropsBuilder = QueueProperties.builder()
                     .withAttendants(attendants)
                     .withQueueCapacity(capacity)
+                    .withRoutes(property.getRoutes())
+                    .withQueueId(property.getId())
                     .withAttendanceInterval(new double[]{attendanceStart, attendanceEnd});
-
             if (property.getArrivalInterval() != null) {
                 var arrivalInterval = property.getArrivalInterval().split("\\.\\.");
                 var arrivalStart = Double.parseDouble(arrivalInterval[0]);
