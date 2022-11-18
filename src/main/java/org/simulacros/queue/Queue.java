@@ -2,58 +2,69 @@ package org.simulacros.queue;
 
 import org.simulacros.events.Scheduler;
 
+import java.util.Arrays;
+
 public class Queue {
 
     private final QueueProperties queueProperties;
-    private final Scheduler scheduler;
 
     private final double[] statesTime;
 
     private int clientsCount;
     private int lostClients = 0;
 
-    public Queue(QueueProperties queueProperties, Scheduler scheduler) {
+    public Queue(QueueProperties queueProperties) {
         this.queueProperties = queueProperties;
-        this.scheduler = scheduler;
-        statesTime = new double[queueProperties.getQueueCapacity() + 1];
+        int statesCount;
+        if (queueProperties.getQueueCapacity() < 0) {
+            statesCount = 10;
+        } else {
+            statesCount = queueProperties.getQueueCapacity() + 1;
+        }
+        statesTime = new double[statesCount];
+
+    }
+
+    public QueueProperties getQueueProperties() {
+        return queueProperties;
     }
 
     public void countTime(double now) {
-        statesTime[this.clientsCount] += now - scheduler.getLastExecuted();
+        statesTime[this.clientsCount] += now - Scheduler.getInstance().getLastExecuted();
     }
 
     public void receiveClient(double now) {
 
-        if (this.clientsCount < this.queueProperties.getQueueCapacity()) {
+        if (this.clientsCount < this.queueProperties.getQueueCapacity() || this.queueProperties.getQueueCapacity() == -1) {
             // case para perda de cliente quando fila cheia
             this.clientsCount++;
 
             if (clientsCount <= queueProperties.getAttendants()) {
                 // agenda saida
-                scheduler.schedulePassage(this.queueProperties, now);
+                Scheduler.getInstance().schedulePassage(this.queueProperties, now);
             }
         } else {
             lostClients++;
         }
-        scheduler.scheduleArrival(this.queueProperties, now);
+        Scheduler.getInstance().scheduleArrival(this.queueProperties, now);
     }
 
 
     public void passClientOut(double now) {
         this.clientsCount--;
         if (clientsCount >= this.queueProperties.getAttendants()) {
-            scheduler.schedulePassage(this.queueProperties, now);
+            Scheduler.getInstance().schedulePassage(this.queueProperties, now);
         }
     }
 
     public void passClientIn(double now) {
         if (clientsCount < this.queueProperties.getQueueCapacity()) {
             this.clientsCount++;
-            if(this.clientsCount <= this.queueProperties.getAttendants()) {
-                scheduler.scheduleExit(this.queueProperties, now);
+            if (this.clientsCount <= this.queueProperties.getAttendants()) {
+                Scheduler.getInstance().scheduleExit(this.queueProperties, now);
             }
         } else {
-            lostClients ++;
+            lostClients++;
         }
     }
 
@@ -62,7 +73,7 @@ public class Queue {
         this.clientsCount--;
 
         if (clientsCount >= queueProperties.getAttendants()) {
-            scheduler.scheduleExit(this.queueProperties, now);
+            Scheduler.getInstance().scheduleExit(this.queueProperties, now);
         }
     }
 
@@ -79,17 +90,27 @@ public class Queue {
         var probs = new double[statesTime.length];
         var total = 0D;
 
-        for (double d: statesTime) {
+        for (double d : statesTime) {
             total += d;
         }
 
         assert total != 0;
 
-        for (int i = 0; i<statesTime.length; i++) {
+        for (int i = 0; i < statesTime.length; i++) {
             probs[i] = statesTime[i] / total * 100;
         }
 
         return probs;
+    }
+
+    @Override
+    public String toString() {
+        return "Queue{" +
+                "ID = " + queueProperties.getQueueId() +
+                "State Time = " + Arrays.toString(this.getStatesTime()) +
+                "Probabilities = " + Arrays.toString(this.getProbabilities()) +
+                "Lost cliente = " + this.getLostClients() +
+                '}';
     }
 }
 

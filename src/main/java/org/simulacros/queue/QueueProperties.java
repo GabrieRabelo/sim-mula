@@ -54,7 +54,7 @@ public class QueueProperties {
     }
 
     public Integer getDestinationQueueId(Double randomNumber) {
-        var sum = 0;
+        double sum = 0;
         for (Route route : routes) {
             var routeRate = route.getRate();
             sum += routeRate;

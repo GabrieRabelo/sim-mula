@@ -12,8 +12,11 @@ public class Scheduler {
     private final List<Event> events = new ArrayList<>();
     private final Stack<Double> randomNumbers;
 
+    private static Scheduler scheduler = null;
+
     public Scheduler(Stack<Double> randomNumbers) {
         this.randomNumbers = randomNumbers;
+        scheduler = this;
     }
 
     public Event getNext() {
@@ -21,6 +24,10 @@ public class Scheduler {
                 .filter(Event::isNotUsed)
                 .reduce((next, previous) -> (next.getTime() > previous.getTime()) ? previous : next)
                 .orElse(null);
+    }
+
+    public static Scheduler getInstance() {
+        return scheduler;
     }
 
     public Double getLastExecuted() {
@@ -41,9 +48,8 @@ public class Scheduler {
         }
         var start = queueProperties.getArrivalInterval()[0];
         var end = queueProperties.getArrivalInterval()[1];
-
         var eventTime = (end - start) * randomNumbers.pop() + start + time;
-        var event = new Event(Action.IN, eventTime, null, null);
+        var event = new Event(Action.IN, eventTime, null, queueProperties.getQueueId());
         this.add(event);
     }
 
@@ -54,7 +60,7 @@ public class Scheduler {
         var start = queueProperties.getAttendanceInterval()[0];
         var end = queueProperties.getAttendanceInterval()[1];
         var eventTime = (end - start) * randomNumbers.pop() + start + time;
-        var event = new Event(Action.OUT, eventTime, null, null);
+        var event = new Event(Action.OUT, eventTime, queueProperties.getQueueId(), null);
         this.add(event);
     }
 
@@ -70,7 +76,12 @@ public class Scheduler {
         }
         var randomNumber = randomNumbers.pop();
         var toQueue = queueProperties.getDestinationQueueId(randomNumber);
-        var event = new Event(Action.PASSAGE, eventTime, queueProperties.getQueueId(), toQueue);
+        Event event;
+        if (toQueue == 0) {
+            event = new Event(Action.OUT, eventTime, queueProperties.getQueueId(), null);
+        } else {
+            event = new Event(Action.PASSAGE, eventTime, queueProperties.getQueueId(), toQueue);
+        }
         this.add(event);
     }
 

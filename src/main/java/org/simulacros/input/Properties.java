@@ -11,6 +11,11 @@ public class Properties {
     private int seed;
     private List<QueueProperty> queues;
 
+    private Double firstArrival;
+
+    private int firstQueue;
+
+
     public Properties() {
     }
 
@@ -20,6 +25,14 @@ public class Properties {
 
     public int getSeed() {
         return seed;
+    }
+
+    public Double getFirstArrival() {
+        return firstArrival;
+    }
+
+    public int getFirstQueue() {
+        return firstQueue;
     }
 
     public List<QueueProperty> getQueues() {

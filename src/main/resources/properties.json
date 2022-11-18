@@ -1,6 +1,8 @@
 {
-  "randoms": 100,
+  "randoms": 10000,
   "seed": 45,
+  "firstArrival": 1.0,
+  "firstQueue": 1,
   "queues": [
     {
       "id": 1,

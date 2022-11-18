@@ -1,17 +1,16 @@
 package org.simulacros;
 
-import org.simulacros.events.Action;
 import org.simulacros.events.Event;
 import org.simulacros.events.Scheduler;
 import org.simulacros.generator.NumberGenerator;
 import org.simulacros.input.Properties;
 import org.simulacros.queue.Network;
-import org.simulacros.queue.QueueProperties;
 import org.simulacros.queue.Queue;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Stack;
+
+import static org.simulacros.events.Action.IN;
 
 public class Simulation {
 
@@ -25,26 +24,11 @@ public class Simulation {
 
         var network = Network.fromProperty(properties.getQueues());
 
-        // Creating queues
-        var firstQueueProperties = QueueProperties.builder()
-                .withArrivalInterval(new double[]{2, 3})
-                .withAttendanceInterval(new double[]{2, 5})
-                .withAttendants(2)
-                .withQueueCapacity(3)
-                .build();
-
-        var secondQueueProperties = QueueProperties.builder()
-                .withAttendanceInterval(new double[]{3, 5})
-                .withAttendants(1)
-                .withQueueCapacity(3)
-                .build();
-
-        var firstQueue = new Queue(firstQueueProperties, scheduler);
-        var secondQueue = new Queue(secondQueueProperties, scheduler);
-
-        // adds first arrival event
-        var firstArrival = new Event(Action.IN, 2.5);
+        var firstArrival = new Event(IN, properties.getFirstArrival(), null, properties.getFirstQueue());
         scheduler.add(firstArrival);
+
+        Queue firstQueue = null;
+        Queue secondQueue = null;
 
         while (!randomNumbers.isEmpty()) {
             //get next event by time
@@ -52,36 +36,30 @@ public class Simulation {
 
             double now = event.getTime();
 
-            firstQueue.countTime(now);
-            secondQueue.countTime(now);
-
-
+            // count time for each queue
+            network.countAllTime(now);
 
             switch (event.getAction()) {
                 case IN:
+                    firstQueue = network.getById(event.getToQueueId());
                     firstQueue.receiveClient(now);
                     break;
                 case PASSAGE:
+                    firstQueue = network.getById(event.getFromQueueId());
+                    secondQueue = network.getById(event.getToQueueId());
                     firstQueue.passClientOut(now);
                     secondQueue.passClientIn(now);
                     break;
                 case OUT:
+                    secondQueue = network.getById(event.getFromQueueId());
                     secondQueue.serveClient(now);
                     break;
                 default:
                     break;
             }
-
             event.use();
         }
-
-        System.out.println("First States: " + Arrays.toString(firstQueue.getStatesTime()));
-        System.out.println("First Probabilities:" + Arrays.toString(firstQueue.getProbabilities()));
-        System.out.println("First Lost Clients: " + firstQueue.getLostClients());
-        System.out.println("----------");
-        System.out.println("Second States: " + Arrays.toString(secondQueue.getStatesTime()));
-        System.out.println("Second Probabilities:" + Arrays.toString(secondQueue.getProbabilities()));
-        System.out.println("Second Lost Clients: " + secondQueue.getLostClients());
+        System.out.println(network.getQueues());
     }
 
     private static Stack<Double> generateRandomStack(int randomNumberLength, int seed) {
