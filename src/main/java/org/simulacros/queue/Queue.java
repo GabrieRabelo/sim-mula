@@ -58,7 +58,7 @@ public class Queue {
     }
 
     public void passClientIn(double now) {
-        if (clientsCount < this.queueProperties.getQueueCapacity()) {
+        if (clientsCount < this.queueProperties.getQueueCapacity() || this.queueProperties.getQueueCapacity() == -1) {
             this.clientsCount++;
             if (this.clientsCount <= this.queueProperties.getAttendants()) {
                 Scheduler.getInstance().scheduleExit(this.queueProperties, now);
@@ -73,6 +73,7 @@ public class Queue {
         this.clientsCount--;
 
         if (clientsCount >= queueProperties.getAttendants()) {
+
             Scheduler.getInstance().scheduleExit(this.queueProperties, now);
         }
     }
@@ -105,12 +106,12 @@ public class Queue {
 
     @Override
     public String toString() {
-        return "Queue{" +
-                "ID = " + queueProperties.getQueueId() +
-                "State Time = " + Arrays.toString(this.getStatesTime()) +
-                "Probabilities = " + Arrays.toString(this.getProbabilities()) +
-                "Lost cliente = " + this.getLostClients() +
-                '}';
+        return "\nQueue{" +
+                "\nID = " + queueProperties.getQueueId() +
+                "\nState Time = " + Arrays.toString(this.getStatesTime()) +
+                "\nProbabilities = " + Arrays.toString(this.getProbabilities()) +
+                "\nLost clients = " + this.getLostClients() +
+                "\n}";
     }
 }
 

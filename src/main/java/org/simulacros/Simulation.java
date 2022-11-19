@@ -52,7 +52,7 @@ public class Simulation {
                     break;
                 case OUT:
                     secondQueue = network.getById(event.getFromQueueId());
-                    secondQueue.serveClient(now);
+                    secondQueue.passClientOut(now);
                     break;
                 default:
                     break;
